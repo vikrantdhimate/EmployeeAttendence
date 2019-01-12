@@ -1,16 +1,13 @@
 package com.attendence;
 
-public class EmpBT 
-{
+public class EmpBT {
 	EmployeeNode employee;
-	
-	public EmpBT() 
-	{
-		employee =  null;
+
+	public EmpBT() {
+		employee = null;
 	}
-	
-	public boolean isEmpty() 
-	{
+
+	public boolean isEmpty() {
 		return employee == null;
 	}
 
@@ -21,45 +18,39 @@ public class EmpBT
 	 * tree. Use a trigger function to call this recursive function from the root
 	 * node.
 	 */
-	EmployeeNode readEmployees(EmployeeNode emp, int id) 
-	{
-		if (emp == null)
-		{
-			return new EmployeeNode(id);			
+	EmployeeNode readEmployees(EmployeeNode emp, int id) {
+		if (emp == null) {
+			return new EmployeeNode(id);
 		}
-        if (id  == emp.getEmpId())
-        {
-        	int attCount = emp.getAttCount()+1;
-        	emp.setAttCount(attCount);
-        	return emp;
-        }
-		if(id > emp.getEmpId())
-		{
-		   emp.right = readEmployees(emp.right, id);
-		}
-        else
-        {            
-           emp.left = readEmployees(emp.left, id);             
-        }
-        return emp;
 
+		if (id == emp.getEmpId()) {
+			int attCount = emp.getAttCount() + 1;
+			emp.setAttCount(attCount);
+			return emp;
+		}
+
+		if (id > emp.getEmpId()) {
+			emp.right = readEmployees(emp.right, id);
+		} else {
+			emp.left = readEmployees(emp.left, id);
+		}
+		return emp;
 	}
 
 	/*
 	 * This function counts the number of unique IDs stored in the tree. Use a
 	 * trigger function to call this recursive function from the root node.
 	 */
-	int getHeadcount(EmployeeNode emp) 
-	{
-		if (emp == null)
-            return 0;
-        else
-        {
-            int count = 1;
-            count += getHeadcount(emp.getLeft());
-            count += getHeadcount(emp.getRight());
-            return count;
-        }
+	int getHeadcount(EmployeeNode emp) {
+		int count = 1;
+		if (emp.left != null) {
+			count += getHeadcount(emp.getLeft());
+		}
+		if (emp.right != null) {
+			count += getHeadcount(emp.getRight());
+		}
+
+		return count;
 	}
 
 	/*
@@ -68,17 +59,18 @@ public class EmpBT
 	 * else it returns false. Use a trigger function to call this recursive function
 	 * from the root node
 	 */
-	boolean searchID(EmployeeNode emp, int id) 
-	{
-		 if (emp.getEmpId() == id)
-             return true;
-         if (emp.getLeft() != null)
-             if (searchID(emp.getLeft(), id))
-                 return true;
-         if (emp.getRight() != null)
-             if (searchID(emp.getRight(), id))
-                 return true;
-         return false;         
+	boolean searchID(EmployeeNode emp, int id) {
+		if (emp.getEmpId() == id)
+			return true;
+
+		if (id < emp.getEmpId() && emp.getLeft() != null) {
+			return searchID(emp.getLeft(), id);
+
+		}
+		if (id > emp.getEmpId() && emp.getRight() != null) {
+			return searchID(emp.getRight(), id);
+		}
+		return false;
 
 	}
 
@@ -89,36 +81,28 @@ public class EmpBT
 	 * root node
 	 */
 
-	
-	int howOften(EmployeeNode emp, int id) 
-	{
-		 int howOften = 0 ; 
-		 if (emp.getEmpId() == id)
-		 {			 
-             System.out.println(" HowOften = " + emp.getAttCount());
-             howOften =  emp.getAttCount();
-		 }
-		 if (emp.getLeft() != null && howOften == 0 )
-         {
-			 howOften = howOften(emp.getLeft(), id);
-         }
-		 if (emp.getRight() != null && howOften == 0 )
-         {
-			 howOften = howOften(emp.getRight(), id);
-         }
-		 return howOften;
+	int howOften(EmployeeNode emp, int id) {
+		if (emp.getEmpId() == id) {
+			return emp.getAttCount();
+		}
+		if (id < emp.getEmpId() && emp.getLeft() != null) {
+			return howOften(emp.getLeft(), id);
+		}
+		if (id > emp.getEmpId() && emp.getRight() != null) {
+			return howOften(emp.getRight(), id);
+		}
+		return 0;
 
-         
 	}
-	
-	void traverse(EmployeeNode emp)
-	{
-		if (emp != null)
-		{
+
+	void traverse(EmployeeNode emp) {
+		if (emp != null) {
 			System.out.println("emp = " + emp.getEmpId() + "-" + emp.getAttCount());
 		}
-		if(emp.left!=null) traverse(emp.left);
-		if(emp.right!=null) traverse(emp.right);
+		if (emp.left != null)
+			traverse(emp.left);
+		if (emp.right != null)
+			traverse(emp.right);
 	}
 
 	/*
@@ -130,20 +114,18 @@ public class EmpBT
 	 * if employee id 22 and 23 have both visited 3 times, the output should show
 	 * either 22 or 23.
 	 */
-	EmployeeNode frequentVisitor(EmployeeNode emp) 
-	{		
-		
-		EmployeeNode temp = emp;
-		if (temp != null)
-		{						
-			if(temp.left!=null && temp.left.getAttCount() >= temp.getAttCount()) 
-				temp =  frequentVisitor(temp.left);		
+	EmployeeNode frequentVisitor(EmployeeNode emp) {
 
-			else if(temp.right!=null && temp.right.getAttCount() >= temp.getAttCount()) 
-				temp =  frequentVisitor(temp.right);		
-			
+		EmployeeNode temp = emp;
+		if (temp != null) {
+			if (temp.left != null && temp.left.getAttCount() >= temp.getAttCount())
+				temp = frequentVisitor(temp.left);
+
+			else if (temp.right != null && temp.right.getAttCount() >= temp.getAttCount())
+				temp = frequentVisitor(temp.right);
+
 		}
-		return emp;
+		return temp;
 	}
 
 	/*
@@ -156,13 +138,13 @@ public class EmpBT
 	 * range must be printed. If the ID is found in the BT, its frequency cannot be
 	 * zero as the person had entered the organization at least once.
 	 */
-	void printRangePresent(EmployeeNode emp, int id1, int id2) 
-	{
-		if (emp != null && emp.getEmpId() > id1 && emp.getEmpId() < id2)
-		{
+	void printRangePresent(EmployeeNode emp, int id1, int id2) {
+		if (emp != null && emp.getEmpId() > id1 && emp.getEmpId() < id2) {
 			System.out.println("emp = " + emp.getEmpId() + "-" + emp.getAttCount());
 		}
-		if(emp.left!=null) printRangePresent(emp.left,id1,id2);
-		if(emp.right!=null) printRangePresent(emp.right,id1,id2);
+		if (emp.getLeft() != null)
+			printRangePresent(emp.left, id1, id2);
+		if (emp.getRight() != null)
+			printRangePresent(emp.right, id1, id2);
 	}
 }
